@@ -1,0 +1,56 @@
+---
+title: "Covid_19"
+output: html_notebook
+---
+
+# Install package 
+```{r}
+require("COVID19")
+```
+# Switzerland 
+```{r}
+
+che_data = covid19(country = "CHE",
+                   level = 1,
+                   start = "2010-01-01", 
+                   end = "2021-09-20",
+                   raw = TRUE,
+                   vintage = FALSE, 
+                   verbose = FALSE,
+                   cache = TRUE,
+                   wb = NULL,
+                   gmr = NULL,
+                   amr = NULL)
+summary(che_data)
+dim(che_data)
+```
+```{r}
+
+
+che_data           <- as.data.frame(che_data[,c('date',
+                                  'vaccines',
+                                  'tests',
+                                  'confirmed',
+                                  'recovered',
+                                  'deaths',
+                                  'population',
+                                  'latitude',
+                                  'longitude')])
+
+che_data[is.null(che_data)] = 0
+
+che_rate_of_change <- apply(che_data[-1],2,diff)
+dim(che_rate_of_change)
+summary(che_rate_of_change)
+
+che_recovered     <- che_rate_of_change['recovered']/che_data[1:nrow(che_data),"population"]
+che_deaths         <- che_rate_of_change['deaths']/che_data[1:nrow(che_data),"population"]
+che_confirmed     <- che_rate_of_change['confirmed']/che_data[1:nrow(che_data),"population"]
+
+che_rates         <- data.frame(date = che_data[1:nrow(che_data),"date"],
+                                confirmed = che_confirmed,
+                                deaths    = che_deaths,
+                                recovered = che_recovered)
+che_rates
+
+```
