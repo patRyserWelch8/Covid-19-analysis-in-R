@@ -7,6 +7,32 @@ output: html_notebook
 ```{r}
 require("COVID19")
 ```
+
+# Some functions to use
+```{r}
+source("tools.R")
+```
+
+# countries
+
+```{r} 
+countries <- c("CHE", "FRA", "GBR","ESP","PRT","SVN","SVK", "DEU","DNK","BGR")
+outcome   <- sapply(countries, function(x) {return(get_data(x))})
+print(outcome)
+```
+
+```{r}
+countries <- NULL
+country   <- get_country_covid_19("CHE")
+countries <- combine(countries, country)
+
+country   <- get_country_covid_19("SYR")
+print(country)
+countries <- combine(countries, country)
+print(countries)
+```
+
+
 # Switzerland 
 ```{r}
 
@@ -39,8 +65,7 @@ rates         <- data.frame(recovered = recovered,
 rates  <- apply(rates[-1],2,diff)
 dates <- che_data[2:nrow(che_data),'date']
 rates <- cbind(dates, rates)
-```
-```{r}
+
 che_data           <- as.data.frame(che_data[,c('date',
                                   'vaccines',
                                   'tests',
@@ -57,13 +82,18 @@ che_rate_of_change <- as.data.frame(apply(che_data[-1],2,diff))
 dim(che_rate_of_change)
 summary(che_rate_of_change)
 
+che_dates         <- che_data[2:nrow(che_data),"date"]
 che_recovered     <- che_rate_of_change['recovered']/che_data[1:nrow(che_data),"population"]
 che_deaths        <- che_rate_of_change['deaths']/che_data[1:nrow(che_data),"population"]
 che_confirmed     <- che_rate_of_change['confirmed']/che_data[1:nrow(che_data),"population"]
+che_latitude      <- che_data[2:nrow(che_data),"latitude"]
+che_longitude     <- che_data[2:nrow(che_data),"longitude"]
 
-che_rates         <- data.frame(date = che_data[2:nrow(che_data),"date"],
+che_rates         <- data.frame(date = che_dates,
                                 confirmed = che_confirmed,
                                 deaths    = che_deaths,
-                                recovered = che_recovered)
+                                recovered = che_recovered,
+                                latitude  = che_latitude,
+                                longitude  = che_longitude)
 che_rates
 ```
