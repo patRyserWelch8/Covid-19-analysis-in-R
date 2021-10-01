@@ -28,7 +28,7 @@ get_country_covid_19 <- function(country = "")
     # clean
     data[is.na(data)] = 0
     data[is.null(data)] = 0
-    print(head(data))
+
 
     # computes ratio in relation to polulation and rate of changes
     recovered     <- data['recovered']/data[1:nrow(data),"population"]
@@ -53,15 +53,15 @@ get_country_covid_19 <- function(country = "")
           )
 }
 
-combine <- function()
+combine <- function(obj.name)
 {
-  if(!exists("all.rates", where = globalenv()))
+  if(!exists(obj.name, where = globalenv()))
   {
     countries <- NULL
   }
   else
   {
-    countries <- get("all.rates", envir = globalenv())
+    countries <- get(obj.name, envir = globalenv())
   }
 
   country   <- get("data.rates", envir = globalenv())
@@ -70,17 +70,17 @@ combine <- function()
 
   if(is.null(countries))
   {
-    assign("all.rates", country, envir = globalenv())
+    assign(obj.name, country, envir = globalenv())
   }
   else
   {
-    assign("all.rates", rbind(countries,country), envir = globalenv())
+    assign(obj.name, rbind(countries,country), envir = globalenv())
   }
 }
 
-get_data <- function(country = "")
+get_data <- function(country = "", obj.name = "all.rates")
 {
   get_country_covid_19(country)
-  combine()
-  return(exists("all.rates", where = globalenv()))
+  combine(obj.name)
+  return(exists(obj.name, where = globalenv()))
 }

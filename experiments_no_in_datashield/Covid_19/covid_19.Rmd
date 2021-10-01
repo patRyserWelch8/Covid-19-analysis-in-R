@@ -3,97 +3,198 @@ title: "Covid_19"
 output: html_notebook
 ---
 
-# Install package 
+# Install package and clean global env
 ```{r}
 require("COVID19")
+rm(list = ls())
 ```
+
+
+
 
 # Some functions to use
 ```{r}
 source("tools.R")
 ```
 
-# countries
+# Retrieve data
+## European countries
 
 ```{r} 
-countries <- c("CHE", "FRA", "GBR","ESP","PRT","SVN","SVK", "DEU","DNK","BGR")
-outcome   <- sapply(countries, function(x) {return(get_data(x))})
-print(outcome)
+countries <- c("BEL","CHE","DNK","ALB", "BGR","CYP","EST", "AND","BIH", "CZE","FIN","AUT","BLR", "DEU",
+               "DNK","HRV","ISL","FRA","GBR","HUN","ITA","GRC", "IRL", "LIE")
+europe    <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.europe"))})
+summary.europe <- summary(data.europe)
+```
+
+## North America
+```{r} 
+countries             <- c("ATG","BHS", "BRB", "BMU","CAN", "CRI", "USA", "CUB","DMA","DOM","SLV","GRD", "GTM", 
+                           "HTI", "HND", "JAM", 'MEX', "NIC", "PAN","PRI","TTO","VIR")
+north.america         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.north.america"))})
+summary.north.america <- summary(data.north.america)
+```
+
+
+## South America
+```{r} 
+countries             <- c("ARG", "BOL", "BRA", "CHL", "COL", "ECU", "GUY", "PRY", "PER", "SUR", "URY","VEN")
+south.america         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.south.america"))})
+summary.south.america <- summary(data.south.america)
+```   
+
+
+## Oceania
+```{r} 
+countries       <- c("AUS","NZL")
+oceania         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.oceania"))})
+summary.oceania <- summary(data.oceania)
+```   
+
+
+
+
+## Asia
+```{r} 
+countries       <- c("AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN","GEO","IND","IDN","IRN","IRQ","ISR","JPN","JOR",
+                     "KAZ","KWT","KGZ","LAO","LBN","MYS","MDV","MNG", "NPL","OMN","PAK","PSE","PHL","QAT","SAU", "SGP","KOR","LKA","SYR","TWN","TJK","THA","TUR",
+                     "ARE","UZB","VNM","YEM")
+asia         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.asia"))})
+summary.asia <- summary(data.asia)
+```   
+
+  
+
+
+
+## Africa
+```{r} 
+countries      <- c("AGO", "BEN", "BWA", "BFA", "BDI","CMR","CPV", "CAF", "TCD", "COM","COG","COD","DJI","EGY","GNQ","ERI","SWZ","ETH","GAB","GMB","GHA",
+                    "GIN","GNB","CIV","KEN","LSO","LBR","LBY","MDG","MWI","MLI","MRT","MUS","MAR","MOZ","NAM","NER","NGA","STP","RWA","STP", "RWA","STP",
+                    "SEN","SYC","SLE","SOM","ZAF","SSD", "SDN","SWZ","TZA","TGO","TUN","UGA","COD","ZMB","TZA","ZWE")
+africa         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.africa"))})
+summary.africa <- summary(data.africa)
+```   
+
+## Merge all the data
+```{r}
+data.all.continents <- rbind(data.north.america, data.oceania, data.europe, data.south.america, data.africa)
+summary.all.continents <- summary(data.all.continents)
+```
+
+## Data properties
+### Europe
+```{r}
+dim(data.europe)
+```   
+### North.America
+```{r}
+dim(data.north.america)
+```
+### South.America
+```{r}
+dim(data.south.america)
+```
+### Oceania
+```{r}
+dim(data.oceania)
+```
+### Asia
+```{r}
+dim(data.asia)
+```
+### Africa
+```{r}
+dim(data.africa)
+```   
+### All continents
+```{r}
+dim(data.all.continents)
+```
+
+
+# Analysis
+## summaries
+### Europe
+```{r}
+summary.europe
+```   
+### North.America
+```{r}
+summary.europe
+```
+### South.America
+```{r}
+summary.south.america
+```
+### Oceania
+```{r}
+summary.oceania
+```
+### Asia
+```{r}
+summary.asia
+```
+### Africa
+```{r}
+summary.africa
+```   
+### All continents
+```{r}
+summary.all.continents
+```
+
+## Ranks 
+### Europe
+```{r}
+ranks.europe <- as.data.frame(sapply(data.europe, rank))
+summary(ranks.europe)
+```
+
+### North America
+```{r}
+ranks.north.america <- as.data.frame(sapply(data.north.america, rank))
+summary(ranks.north.america)
+```
+
+### South America
+```{r}
+ranks.south.america <- as.data.frame(sapply(data.south.america, rank))
+summary(ranks.south.america)
+```
+### Oceania
+```{r}
+ranks.oceania <- as.data.frame(sapply(data.oceania, rank))
+summary(ranks.oceania)
+```
+
+### Asia
+```{r}
+ranks.asia <- as.data.frame(sapply(data.asia, rank))
+summary(ranks.asia)
+```
+
+### Africa
+```{r}
+ranks.africa <- as.data.frame(sapply(data.africa, rank))
+summary(ranks.africa)
+```
+# Wilcox.test
+## Europe 
+```{r}
+wilcox.test(data.europe$confirmed,data.africa$confirmed)
+
 ```
 
 ```{r}
-countries <- NULL
-country   <- get_country_covid_19("CHE")
-countries <- combine(countries, country)
-
-country   <- get_country_covid_19("SYR")
-print(country)
-countries <- combine(countries, country)
-print(countries)
-```
-
-
-# Switzerland 
+wilcox.test(data.europe$confirmed,data.asia$confirmed)
+```       
 ```{r}
-
-che_data = covid19(country = "CHE",
-                   level = 1,
-                   start = "2010-01-01", 
-                   end = Sys.Date(),
-                   raw = TRUE,
-                   vintage = FALSE, 
-                   verbose = FALSE,
-                   cache = TRUE,
-                   wb = NULL,
-                   gmr = NULL,
-                   amr = NULL)
-
-che_data[is.na(che_data)] = 0
-che_data[is.null(che_data)] = 0
-
-
-recovered     <- che_data['recovered']/che_data[1:nrow(che_data),"population"]
-deaths        <- che_data['deaths']/che_data[1:nrow(che_data),"population"]
-confirmed     <- che_data['confirmed']/che_data[1:nrow(che_data),"population"]
-
-
-
-rates         <- data.frame(recovered = recovered,
-                            deaths  = deaths,
-                            confirmed)
-
-rates  <- apply(rates[-1],2,diff)
-dates <- che_data[2:nrow(che_data),'date']
-rates <- cbind(dates, rates)
-
-che_data           <- as.data.frame(che_data[,c('date',
-                                  'vaccines',
-                                  'tests',
-                                  'confirmed',
-                                  'recovered',
-                                  'deaths',
-                                  'population',
-                                  'latitude',
-                                  'longitude')])
-
-che_data[is.null(che_data)] = 0
-
-che_rate_of_change <- as.data.frame(apply(che_data[-1],2,diff))
-dim(che_rate_of_change)
-summary(che_rate_of_change)
-
-che_dates         <- che_data[2:nrow(che_data),"date"]
-che_recovered     <- che_rate_of_change['recovered']/che_data[1:nrow(che_data),"population"]
-che_deaths        <- che_rate_of_change['deaths']/che_data[1:nrow(che_data),"population"]
-che_confirmed     <- che_rate_of_change['confirmed']/che_data[1:nrow(che_data),"population"]
-che_latitude      <- che_data[2:nrow(che_data),"latitude"]
-che_longitude     <- che_data[2:nrow(che_data),"longitude"]
-
-che_rates         <- data.frame(date = che_dates,
-                                confirmed = che_confirmed,
-                                deaths    = che_deaths,
-                                recovered = che_recovered,
-                                latitude  = che_latitude,
-                                longitude  = che_longitude)
-che_rates
+wilcox.test(data.europe$confirmed,data.south.america$confirmed)
+```
+```{r}
+wilcox.test(data.europe$confirmed,data.north.america$confirmed)
+```
+```{r}
+wilcox.test(data.europe$confirmed,data.oceania$confirmed)
 ```
