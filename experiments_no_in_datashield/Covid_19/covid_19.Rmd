@@ -10,44 +10,52 @@ rm(list = ls())
 ```
 
 
-
-
-# Some functions to use
+# Some functions to use and global variables: 
+Path to be changed if used by another computer....
 ```{r}
 source("tools.R")
+path.out = '/Users/patricia/Documents/GitHub/Homolous_encryption_application/experiments_no_in_datashield/Covid_19/data'
 ```
 
 # Retrieve data
 ## European countries
 
 ```{r} 
+file.name <- paste(path.out, '/data_europe.csv',sep = '')
 countries <- c("BEL","CHE","DNK","ALB", "BGR","CYP","EST", "AND","BIH", "CZE","FIN","AUT","BLR", "DEU",
                "DNK","HRV","ISL","FRA","GBR","HUN","ITA","GRC", "IRL", "LIE")
 europe    <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.europe"))})
+write.csv(data.europe,file.name, row.names = TRUE)
 summary.europe <- summary(data.europe)
 ```
 
 ## North America
 ```{r} 
+file.name <- paste(path.out, '/data_north_america.csv',sep = '')
 countries             <- c("ATG","BHS", "BRB", "BMU","CAN", "CRI", "USA", "CUB","DMA","DOM","SLV","GRD", "GTM", 
                            "HTI", "HND", "JAM", 'MEX', "NIC", "PAN","PRI","TTO","VIR")
 north.america         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.north.america"))})
+write.csv(data.north.america,file.name, row.names = TRUE)
 summary.north.america <- summary(data.north.america)
 ```
 
 
 ## South America
 ```{r} 
+file.name <- paste(path.out, '/data_south_america.csv',sep = '')
 countries             <- c("ARG", "BOL", "BRA", "CHL", "COL", "ECU", "GUY", "PRY", "PER", "SUR", "URY","VEN")
 south.america         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.south.america"))})
+write.csv(data.south.america,file.name, row.names = TRUE)
 summary.south.america <- summary(data.south.america)
 ```   
 
 
 ## Oceania
 ```{r} 
+file.name <- paste(path.out, '/data_oceania.csv',sep = '')
 countries       <- c("AUS","NZL")
 oceania         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.oceania"))})
+write.csv(data.oceania,file.name, row.names = TRUE)
 summary.oceania <- summary(data.oceania)
 ```   
 
@@ -56,10 +64,12 @@ summary.oceania <- summary(data.oceania)
 
 ## Asia
 ```{r} 
+file.name <- paste(path.out, '/data_asia.csv',sep = '')
 countries       <- c("AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN","GEO","IND","IDN","IRN","IRQ","ISR","JPN","JOR",
                      "KAZ","KWT","KGZ","LAO","LBN","MYS","MDV","MNG", "NPL","OMN","PAK","PSE","PHL","QAT","SAU", "SGP","KOR","LKA","SYR","TWN","TJK","THA","TUR",
                      "ARE","UZB","VNM","YEM")
 asia         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.asia"))})
+write.csv(data.asia,file.name, row.names = TRUE)
 summary.asia <- summary(data.asia)
 ```   
 
@@ -69,10 +79,12 @@ summary.asia <- summary(data.asia)
 
 ## Africa
 ```{r} 
+file.name <- paste(path.out, '/data_africa.csv',sep = '')
 countries      <- c("AGO", "BEN", "BWA", "BFA", "BDI","CMR","CPV", "CAF", "TCD", "COM","COG","COD","DJI","EGY","GNQ","ERI","SWZ","ETH","GAB","GMB","GHA",
                     "GIN","GNB","CIV","KEN","LSO","LBR","LBY","MDG","MWI","MLI","MRT","MUS","MAR","MOZ","NAM","NER","NGA","STP","RWA","STP", "RWA","STP",
                     "SEN","SYC","SLE","SOM","ZAF","SSD", "SDN","SWZ","TZA","TGO","TUN","UGA","COD","ZMB","TZA","ZWE")
 africa         <- sapply(countries, function(x) {print(x);return(get_data(x, obj.name = "data.africa"))})
+write.csv(data.africa,file.name, row.names = TRUE)
 summary.africa <- summary(data.africa)
 ```   
 
@@ -198,3 +210,4 @@ wilcox.test(data.europe$confirmed,data.north.america$confirmed)
 ```{r}
 wilcox.test(data.europe$confirmed,data.oceania$confirmed)
 ```
+

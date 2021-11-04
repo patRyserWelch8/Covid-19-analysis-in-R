@@ -1,0 +1,74 @@
+---
+title: "Ranking using DataShield"
+output: html_notebook
+---
+
+# Libraries and global variables
+```{r}
+library(DSI)
+library(DSOpal)
+library(dsBaseClient)
+library(dsConnectClient)
+IN_SCRIPT      <- TRUE
+SERVERS_SYMBOL <- "D"
+```
+
+# Building login data frame and login
+```{R}
+source("datashield_login_info.R")
+```
+Login data details:
+```{r}
+login_data
+```
+
+Connections details:
+```{r}
+connections
+```   
+# Explore the data on the servers
+## List of R objects on each servers
+```{R}
+dsBaseClient::ds.ls(datasources = connections)
+```
+_Dimensions:_
+```{r}
+ds.dim(x="D", type = "both", datasources = connections)
+```
+
+
+
+_Summary:_
+```{r}
+ds.summary(x = "D", datasources = connections)
+```
+
+# Statistics
+_Centrality:_
+```{r}
+ds.mean(x = "D$confirmed", type = "both", datasources = connections)
+```
+_Quantiles_:
+```{r}
+ds.quantileMean(x='D$confirmed', type = "split", datasources = connections)
+```
+
+```{r}
+ds.quantileMean(x='D$confirmed', type = "combine", datasources = connections)
+```
+_Skewness:_
+https://en.wikipedia.org/wiki/File:Relationship_between_mean_and_median_under_different_skewness.png
+
+```{r}
+ds.skewness(x = "D$confirmed",
+              method = 1, 
+              type = "both",
+             datasources = connections)
+```
+
+
+# Logout
+```{r}
+ds.logout()
+rm(list= ls())
+```
