@@ -9,9 +9,12 @@ library(DSI)
 library(DSOpal)
 library(dsBaseClient)
 library(dsConnectClient)
+library(dsShareClient)
+source("tools_datashield.R")
 IN_SCRIPT      <- TRUE
 SERVERS_SYMBOL <- "D"
 ```
+
 
 # Building login data frame and login
 ```{R}
@@ -25,7 +28,7 @@ login_data
 Connections details:
 ```{r}
 connections
-```   
+```       
 # Explore the data on the servers
 ## List of R objects on each servers
 ```{R}
@@ -66,6 +69,60 @@ ds.skewness(x = "D$confirmed",
              datasources = connections)
 ```
 
+
+
+# Homologuous encryption
+## Prepare for encryption - assign values to servers and client
+
+```{r}
+assignNonParamSettings(x = "D$confirmed", data.encrypted = "data.encrypted", datasources = connections)
+```
+
+# client side variables
+```{r}
+ls(pattern =".non.param.setting", all.names = TRUE)
+```
+
+_Name of servers variables created on the servers_:
+```{r}
+.non.param.setting
+```
+
+# server-side 
+_New R object settings_non_param_
+```{r}
+dsBaseClient::ds.ls(datasources = connections)
+```
+
+## Assign values to variables required for sharing 
+```{r}
+dsShareClient::ds.assign.sharing.settings(datasources = connections)
+```
+
+```{r}
+dsBaseClient::ds.ls(datasources = connections)
+```
+## share the parameters using a matrix base homologuous encryption
+vectors dot-products and matrices multiplication are used to share parameters using a series of shared-secrets. Communication between two servers and passing through an analysis computers occurs. Each time two servers starts the exchange of private and share secrets, new random encrypting values are used. 
+```{r}
+# retrieve names of the params stored on the server
+param.names <- .non.param.setting
+param.names <- unlist(param.names)
+    
+dsShareClient::ds.share.param(param.names = param.names, datasources = connections)    
+```
+
+```{r}
+dsBaseClient::ds.ls(datasources = connections)
+```
+```{r}
+occult(datasources = connections)
+```
+
+```{r}
+dsBaseClient::ds.ls(datasources = connections)
+ds.summary(x = "sharing", datasources = connections)
+```
 
 # Logout
 ```{r}
