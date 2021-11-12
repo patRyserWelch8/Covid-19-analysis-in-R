@@ -41,7 +41,7 @@ ds.dim(x="D", type = "both", datasources = connections)
 
 
 
-_Summary:_
+**Summary:**
 ```{r}
 ds.summary(x = "D", datasources = connections)
 ```
@@ -59,7 +59,7 @@ ds.quantileMean(x='D$confirmed', type = "split", datasources = connections)
 ```{r}
 ds.quantileMean(x='D$confirmed', type = "combine", datasources = connections)
 ```
-_Skewness:_
+**Skewness:**
 https://en.wikipedia.org/wiki/File:Relationship_between_mean_and_median_under_different_skewness.png
 
 ```{r}
@@ -89,7 +89,7 @@ _Name of servers variables created on the servers_:
 ```
 
 # server-side 
-_New R object settings_non_param_
+**New R object settings_non_param**
 ```{r}
 dsBaseClient::ds.ls(datasources = connections)
 ```
@@ -108,11 +108,12 @@ vectors dot-products and matrices multiplication are used to share parameters us
 # retrieve names of the params stored on the server
 param.names <- .non.param.setting
 param.names <- unlist(param.names)
-    
+Sys.time()
 dsShareClient::ds.share.param(param.names = param.names, datasources = connections)    
 ```
 
 ```{r}
+Sys.time()
 dsBaseClient::ds.ls(datasources = connections)
 ```
 ```{r}
@@ -122,6 +123,29 @@ occult(datasources = connections)
 ```{r}
 dsBaseClient::ds.ls(datasources = connections)
 ds.summary(x = "sharing", datasources = connections)
+```
+```{r}
+ls(all.names = TRUE)
+```
+
+```{r}
+.non.param.setting
+```
+
+```{r}
+client.compute.bin(datasources = connections)
+```
+
+```{r}
+ls(all.names = TRUE)
+```
+
+```{r}
+.bins.definition
+```
+```{r}
+source("tools_datashield.R")
+compute.rank(datasources = connections)
 ```
 
 # Logout
