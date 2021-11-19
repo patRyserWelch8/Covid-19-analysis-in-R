@@ -147,6 +147,12 @@ ls(all.names = TRUE)
 source("tools_datashield.R")
 compute.rank(datasources = connections)
 ```
+```{r}
+ls(all.names = TRUE)
+```
+```{r}
+.ranks
+```
 
 # Logout
 ```{r}

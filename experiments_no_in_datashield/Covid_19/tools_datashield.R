@@ -169,6 +169,8 @@ compute.rank <- function(x = "data.encrypted", env = globalenv(), datasources)
              rank.bin(x = x,
                            encoded.data = encoded.data,
                            env = env)
+
+             print("problem here with rank.bin")
            }
 
 
@@ -224,16 +226,15 @@ compute.sequence <- function(client.var.name, env)
 create.bin <- function(x, newobj,min,max, env, datasources)
 {
   expression   <- call("createBinDS", x, newobj, min, max)
-  print("OH CRUMBS")
-  print(expression)
+
   results      <- dsConnectClient::ds.aggregate(expression = expression,
                                                 asynchronous = TRUE,
                                                 error.stop = TRUE,
                                                 datasources = datasources)
 
   # retrieve bins from each server
-  print("here")
-  print(var.names)
+
+
   var.names <- unlist(strsplit(x, ";"))
   results <- dsShareClient::ds.read(data.from.server = var.names ,
                                     data.encrypted = ".bin",
@@ -260,10 +261,13 @@ rank.bin <- function(x, encoded.data, env)
 {
   if(ncol(encoded.data) > 0)
   {
-    # compute rank
+    # compute rank - problem in this funciton .....
 
+    print(1)
     max.rank  <- get(".max_rank", envir = env)
-    ranks     <- get(".ranks" , envir = env)
+    print(2)
+    ranks     <- get(".ranks" , envir = env) #here first time ranks do not exists ...
+    print(3)
 
     bin.ranks <- rank(encoded.data[,1])
     bin.ranks <- bin.ranks + max.rank
