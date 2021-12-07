@@ -139,15 +139,17 @@ compute.rank <- function(x = "data.encrypted", env = globalenv(), datasources)
   indices         <- 1:(length(ranges[,1]) - 1)
 
   "issue here and rank data - work with columns - i.e. list...."
-  name.var.client <- sapply(names(ranges),
-                            function(name)
-                            {
-                              assign(paste0(".ranks_",name), c(), envir = env)
-                              assign(paste0(".max_rank_", name), 0, envir = env)
-                              return(exist(paste0(".ranks_",name), envir = env) &
-                                       exist(paste0(".max_rank_", name), envir = env))
-                            })
+ # name.var.client <- sapply(names(ranges),
+#                            function(name)
+#                            {
+#                              assign(paste0(".ranks_",name), c(), envir = env)
+#                              assign(paste0(".max_rank_", name), 0, envir = env)
+#                              return(exist(paste0(".ranks_",name), envir = env) &
+#                                       exist(paste0(".max_rank_", name), envir = env))
+#                            })
 
+  assign(".ranks", c(), envir = env)
+  assign(".max_rank", 0, envir = env)
   # each range is executed
   sapply(indices,
          function(i, x, name.var.client, ranges, env, datasources)
@@ -160,15 +162,23 @@ compute.rank <- function(x = "data.encrypted", env = globalenv(), datasources)
 
 
              #create bins on the server and bring encoded data to the client
+             print("&&&&&&")
+             print(x)
+             print("&&&&&&")
              encoded.data <- create.bin(x = x,
                                              newobj = ".bin",
                                              min = min,
                                              max = max,
                                              env = env,
                                              datasources = datasources)
-             rank.bin(x = x,
-                           encoded.data = encoded.data,
-                           env = env)
+             
+             print(i)
+             print(class(encoded.data))
+             print(dim(encoded.data))
+
+             #rank.bin(x = x,
+             #               encoded.data = encoded.data,
+             #ß               env = env)
 
              print("problem here with rank.bin")
            }
@@ -234,17 +244,22 @@ create.bin <- function(x, newobj,min,max, env, datasources)
 
   # retrieve bins from each server
 
-
+  print("&&&&&&&&&&&&&&&&&5")
   var.names <- unlist(strsplit(x, ";"))
+  print(var.names)
+  print("&&&&&&&&&&&&&&&&&5")
+  print(dsBaseClient::ds.ls(datasources = datasources))
   results <- dsShareClient::ds.read(data.from.server = var.names ,
-                                    data.encrypted = ".bin",
+                                      data.encrypted = ".bin",
                                     client.side.variable = "temp.data",
                                     no.rows = 1000,
                                     datasources = datasources)
+  print(results)
+  print(head(temp.data))
 
-  #print("YYYYYYYYYY")
-  #print(results)
-  #print(get("temp.data", envir = env))
+  print("YYYYYYYYYY")
+  print(head(results))
+  print(head(get("temp.data", envir = env)))
   # return encoded data in bin data
   if (exists("temp.data", where = env))
   {
@@ -259,7 +274,10 @@ create.bin <- function(x, newobj,min,max, env, datasources)
 
 rank.bin <- function(x, encoded.data, env)
 {
-  if(ncol(encoded.data) > 0)
+
+  print("*****")
+  
+  if(ncol(encoded.data) >= 0)
   {
     # compute rank - problem in this funciton .....
 
@@ -268,11 +286,12 @@ rank.bin <- function(x, encoded.data, env)
     print(2)
     ranks     <- get(".ranks" , envir = env) #here first time ranks do not exists ...
     print(3)
-
-    bin.ranks <- rank(encoded.data[,1])
+    print(encoded.data)
+    #bin.ranks <- rank(encoded.data[,1])
+    bin.ranks <- rank(encoded.data)
     bin.ranks <- bin.ranks + max.rank
-
-
+    print(4)
+     print(bin.ranks)
     assign(".ranks", c(ranks, bin.ranks), envir = env)
     assign(".max_rank", max(bin.ranks), envir = env)
   }
